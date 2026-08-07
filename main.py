@@ -14,4 +14,11 @@ import statsmodels.api as sm
 from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error
 
 
+df = pd.read_csv("AAPL.csv")
+print(df.head())
 
+print(df.tail())
+
+print(df.shape)
+
+print(df.describe().T.apply(lambda x: x.apply("{0:.3f}".format)))
