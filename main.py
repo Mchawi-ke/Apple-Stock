@@ -31,3 +31,20 @@ print(df.isnull().sum())
 
 print(df.duplicated().sum())
 
+
+
+df = df.set_index("Date")
+
+fig = make_subplots(rows=6, cols=1, 
+                    subplot_titles=("Opening Price", "Closing Price", "Highest Price", 
+                                    "Lowest Price", "Adjusted Closing Price", "Volume"))
+
+fig.add_trace(go.Scatter(x=df.index, y=df["Open"]), row=1, col=1)
+fig.add_trace(go.Scatter(x=df.index, y=df["Close"]), row=2, col=1)
+fig.add_trace(go.Scatter(x=df.index, y=df["High"]), row=3, col=1)
+fig.add_trace(go.Scatter(x=df.index, y=df["Low"]), row=4, col=1)
+fig.add_trace(go.Scatter(x=df.index, y=df["Adj Close"]), row=5, col=1)
+fig.add_trace(go.Scatter(x=df.index, y=df["Volume"]), row=6, col=1)
+fig.update_layout(showlegend=False, height=1200, width=800)
+fig.show()
+
