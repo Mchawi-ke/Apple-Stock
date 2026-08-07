@@ -22,3 +22,12 @@ print(df.tail())
 print(df.shape)
 
 print(df.describe().T.apply(lambda x: x.apply("{0:.3f}".format)))
+
+print(df.info())
+
+df["Date"] = pd.to_datetime(df["Date"])
+
+print(df.isnull().sum())
+
+print(df.duplicated().sum())
+
