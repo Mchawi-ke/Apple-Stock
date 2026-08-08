@@ -188,6 +188,39 @@ callbacks = [EarlyStopping(monitor='loss', patience=10, restore_best_weights=Tru
 history2 = model2.fit(x_train_expanded, y_train, epochs=100, batch_size=32, callbacks=callbacks)
 
 
+# Add an extra channel dimension to the input (expanding to 5D)
+x_train_expanded = tf.expand_dims(x_train, axis=-1)  # Expanding to shape (None, 60, height, width, 1)
+
+# Define the ConvLSTM2D layer with adjusted parameters
+base_model3 = keras.layers.ConvLSTM2D(
+    filters=64,  # Define number of filters
+    kernel_size=(3, 3),  # Define kernel size
+    strides=1,
+    padding="same",  # Use 'same' padding to avoid reducing input size
+    activation="tanh",
+    recurrent_activation="sigmoid",
+    use_bias=True,
+    kernel_initializer="glorot_uniform",
+    recurrent_initializer="orthogonal",
+    bias_initializer="zeros",
+    unit_forget_bias=True,
+    dropout=0.0,
+    recurrent_dropout=0.0,
+    return_sequences=False,
+    return_state=False,
+    go_backwards=False,
+    stateful=False,
+    input_shape=(x_train_expanded.shape[1], x_train_expanded.shape[2], x_train_expanded.shape[3], 1)  # 5D input shape
+)
+
+# Define the full model
+model3 = Sequential([
+    base_model3,
+    Dense(32),
+    Dense(16),
+    Dense(1)
+])
+
 
 
 
