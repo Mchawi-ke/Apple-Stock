@@ -124,6 +124,70 @@ model1.compile(optimizer='adam', loss='mse', metrics=['mean_absolute_error'])
 callbacks = [EarlyStopping(monitor= 'loss', patience= 10 , restore_best_weights= True)]
 history1 = model1.fit(x_train, y_train, epochs= 100, batch_size= 32 , callbacks= callbacks )
 
+# Define the ConvLSTM1D layer with the correct parameters
+base_model2 = keras.layers.ConvLSTM1D(
+    filters=filters,
+    kernel_size=kernel_size,
+    strides=1,
+    padding="valid",
+    activation="tanh",
+    recurrent_activation="sigmoid",
+    use_bias=True,
+    kernel_initializer="glorot_uniform",
+    recurrent_initializer="orthogonal",
+    bias_initializer="zeros",
+    unit_forget_bias=True,
+    dropout=0.0,
+    recurrent_dropout=0.0,
+    return_sequences=False,
+    return_state=False,
+    go_backwards=False,
+    stateful=False,
+)
+
+# Add an extra spatial dimension to the input (expanding to 4D)
+x_train_expanded = tf.expand_dims(x_train, axis=2)  # Expanding to shape (None, 60, 1, 1)
+
+# Define ConvLSTM1D with the correct input shape
+base_model2 = keras.layers.ConvLSTM1D(
+    filters=64,  # Number of filters
+    kernel_size=1,  # Adjusted kernel size
+    strides=1,
+    padding="valid",
+    activation="tanh",
+    recurrent_activation="sigmoid",
+    use_bias=True,
+    kernel_initializer="glorot_uniform",
+    recurrent_initializer="orthogonal",
+    bias_initializer="zeros",
+    unit_forget_bias=True,
+    dropout=0.0,
+    recurrent_dropout=0.0,
+    return_sequences=False,
+    return_state=False,
+    go_backwards=False,
+    stateful=False,
+    input_shape=(x_train_expanded.shape[1], x_train_expanded.shape[2], x_train_expanded.shape[3])  # 4D input shape
+)
+
+# Define the model
+model2 = Sequential([
+    base_model2,
+    Dense(32),
+    Dense(16),
+    Dense(1)
+])
+
+# Compile the model
+model2.compile(optimizer='adam', loss='mse', metrics=['mean_absolute_error'])
+
+# Early stopping callback
+callbacks = [EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)]
+
+# Fit the model with expanded data
+history2 = model2.fit(x_train_expanded, y_train, epochs=100, batch_size=32, callbacks=callbacks)
+
+
 
 
 
