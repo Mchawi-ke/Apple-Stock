@@ -18,18 +18,27 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 
-df = pd.read_csv("AAPL.csv")
+df = pd.read_csv("AAPL.csv", parse_dates=True, index_col="Date")
 print(df.head())
 
 print(df.tail())
 
 print(df.shape)
 
-print(df.describe().T.apply(lambda x: x.apply("{0:.3f}".format)))
+print(df.describe())
 
 print(df.info())
 
-df["Date"] = pd.to_datetime(df["Date"])
+plt.figure(figsize=(15, 6))
+df['Open'].plot()
+df['Close'].plot()
+plt.ylabel(None)
+plt.xlabel(None)
+plt.title("Opening & Closing Price of Tesla")
+plt.legend(['Open Price', 'Close Price'])
+plt.tight_layout()
+plt.show()
+
 
 print(df.isnull().sum())
 
