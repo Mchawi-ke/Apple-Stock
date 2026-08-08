@@ -73,6 +73,56 @@ scaled_data = scaler.fit_transform(np.array(data).reshape(-1, 1))
 print(scaled_data.shape)
 
 
+# 75% to Train , 25% to Test
+train_size = int(len(data)*.75)
+test_size = len(data) - train_size
+
+print("Train Size :",train_size,"Test Size :",test_size)
+
+train_data = scaled_data[ :train_size , 0:1 ]
+test_data = scaled_data[ train_size-60: , 0:1 ]
+
+print(train_data.shape, test_data.shape)
+
+
+# Creating a Training set with 60 time-steps and 1 output
+x_train = []
+y_train = []
+
+for i in range(60, len(train_data)):
+    x_train.append(train_data[i-60:i, 0])
+    y_train.append(train_data[i, 0])
+
+
+ # Convert to numpy array
+x_train, y_train = np.array(x_train), np.array(y_train)
+
+
+# Reshaping the input
+x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
+
+
+print(x_train.shape , y_train.shape)
+
+base_model1 = keras.layers.Bidirectional(
+    keras.layers.LSTM(units=64),  # specify the number of units or any other parameters
+    merge_mode="concat"
+)
+
+# Define the model structure
+model1 = Sequential([
+    base_model1,
+    Dense(32),
+    Dense(16),
+    Dense(1)
+])
+
+# Compile the model
+model1.compile(optimizer='adam', loss='mse', metrics=['mean_absolute_error'])
+
+# Fitting the LSTM to the Training set
+callbacks = [EarlyStopping(monitor= 'loss', patience= 10 , restore_best_weights= True)]
+history1 = model1.fit(x_train, y_train, epochs= 100, batch_size= 32 , callbacks= callbacks )
 
 
 
