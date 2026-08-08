@@ -292,9 +292,7 @@ predictions = scaler.inverse_transform(predictions)
 
 
 
-fig = make_subplots(rows=6, cols=1, 
-                    subplot_titles=("Opening Price", "Closing Price", "Highest Price", 
-                                    "Lowest Price", "Adjusted Closing Price", "Volume"))
+
 
 fig.add_trace(go.Scatter(x=df.index, y=df["Open"]), row=1, col=1)
 fig.add_trace(go.Scatter(x=df.index, y=df["Close"]), row=2, col=1)
