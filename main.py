@@ -29,6 +29,10 @@ print(df.describe())
 
 print(df.info())
 
+print(df.isnull().sum())
+
+print(df.duplicated().sum())
+
 plt.figure(figsize=(15, 6))
 df['Open'].plot()
 df['Close'].plot()
@@ -40,9 +44,36 @@ plt.tight_layout()
 plt.show()
 
 
-print(df.isnull().sum())
+plt.figure(figsize=(15, 6))
+df['Volume'].plot()
+plt.ylabel('Volume')
+plt.xlabel(None)
+plt.title("Sales Volume of Apple")
+plt.tight_layout()
+plt.show()
 
-print(df.duplicated().sum())
+# We'll use pct_change to find the percent change for each day
+plt.figure(figsize=(15, 6))
+df['Adj Close'].pct_change().hist(bins=50)
+plt.ylabel('Daily Return')
+plt.title(f'Apple Dialy Return')
+plt.tight_layout()
+plt.show()
+
+dataset = df["Close"]
+dataset = pd.DataFrame(dataset)
+
+data = dataset.values
+
+print(data.shape)
+
+scaler = MinMaxScaler(feature_range= (0, 1))
+scaled_data = scaler.fit_transform(np.array(data).reshape(-1, 1))
+
+print(scaled_data.shape)
+
+
+
 
 
 
