@@ -231,18 +231,62 @@ callbacks = [EarlyStopping(monitor='loss', patience=10, restore_best_weights=Tru
 history3 = model3.fit(x_train_expanded, y_train, epochs=100, batch_size=32, callbacks=callbacks)
 
 
-df = df.set_index("Date")
 
-fig = make_subplots(rows=6, cols=1, 
-                    subplot_titles=("Opening Price", "Closing Price", "Highest Price", 
-                                    "Lowest Price", "Adjusted Closing Price", "Volume"))
 
-fig.add_trace(go.Scatter(x=df.index, y=df["Open"]), row=1, col=1)
-fig.add_trace(go.Scatter(x=df.index, y=df["Close"]), row=2, col=1)
-fig.add_trace(go.Scatter(x=df.index, y=df["High"]), row=3, col=1)
-fig.add_trace(go.Scatter(x=df.index, y=df["Low"]), row=4, col=1)
-fig.add_trace(go.Scatter(x=df.index, y=df["Adj Close"]), row=5, col=1)
-fig.add_trace(go.Scatter(x=df.index, y=df["Volume"]), row=6, col=1)
-fig.update_layout(showlegend=False, height=1200, width=800)
-fig.show()
+# Sample model history data (Replace these with your actual history data)
+# Let's assume history1, history2, and history3 are dictionaries containing loss and accuracy
+history1 = {'accuracy': [0.8, 0.85, 0.9], 'loss': [0.5, 0.4, 0.3]}
+history2 = {'accuracy': [0.75, 0.82, 0.88], 'loss': [0.6, 0.45, 0.35]}
+history3 = {'accuracy': [0.78, 0.83, 0.89], 'loss': [0.55, 0.42, 0.33]}
+
+# Number of epochs
+epochs = range(1, len(history1['accuracy']) + 1)
+
+# Plotting Accuracy
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)
+plt.plot(epochs, history1['accuracy'], label='Model 1 Accuracy', marker='o')
+plt.plot(epochs, history2['accuracy'], label='Model 2 Accuracy', marker='o')
+plt.plot(epochs, history3['accuracy'], label='Model 3 Accuracy', marker='o')
+plt.title('Model Accuracy Comparison')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.xticks(epochs)
+plt.ylim(0, 1)
+plt.legend()
+
+# Plotting Loss
+plt.subplot(1, 2, 2)
+plt.plot(epochs, history1['loss'], label='Model 1 Loss', marker='o')
+plt.plot(epochs, history2['loss'], label='Model 2 Loss', marker='o')
+plt.plot(epochs, history3['loss'], label='Model 3 Loss', marker='o')
+plt.title('Model Loss Comparison')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.xticks(epochs)
+plt.ylim(0, max(max(history1['loss']), max(history2['loss']), max(history3['loss'])) + 0.1)
+plt.legend()
+
+plt.tight_layout()
+plt.show()
+
+
+# Creating a testing set with 60 time-steps and 1 output
+x_test = []
+y_test = []
+
+for i in range(60, len(test_data)):
+    x_test.append(test_data[i-60:i, 0])
+    y_test.append(test_data[i, 0])
+x_test, y_test = np.array(x_test), np.array(y_test)
+x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+
+
+#inverse y_test scaling
+predictions = model1.predict(x_test)
+
+#inverse predictions scaling
+predictions = scaler.inverse_transform(predictions)
+
 
