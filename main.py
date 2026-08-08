@@ -290,7 +290,7 @@ predictions = model1.predict(x_test)
 predictions = scaler.inverse_transform(predictions)
 
 
-df = df.set_index("Date")
+
 
 fig = make_subplots(rows=6, cols=1, 
                     subplot_titles=("Opening Price", "Closing Price", "Highest Price", 
