@@ -221,7 +221,14 @@ model3 = Sequential([
     Dense(1)
 ])
 
+# Compile the model
+model3.compile(optimizer='adam', loss='mse', metrics=['mean_absolute_error'])
 
+# Early stopping callback
+callbacks = [EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)]
+
+# Fit the model
+history3 = model3.fit(x_train_expanded, y_train, epochs=100, batch_size=32, callbacks=callbacks)
 
 
 df = df.set_index("Date")
