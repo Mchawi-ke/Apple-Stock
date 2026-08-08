@@ -1,17 +1,21 @@
-# pip install numpy pandas matplotlib plotly statsmodels scikit-learn
+# pip install numpy pandas seaborn matplotlib tensorflow scikit-learn
 
 
 import numpy as np
 import pandas as pd
+import seaborn as sns
+sns.set_style('whitegrid')
 import matplotlib.pyplot as plt
-import plotly.express as px
-from plotly.subplots import make_subplots
-import plotly.graph_objects as go
-from statsmodels.tsa.seasonal import seasonal_decompose
-from statsmodels.tsa.stattools import adfuller
-from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
-import statsmodels.api as sm
-from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error
+plt.style.use("fivethirtyeight")
+
+import keras
+from keras.models import Sequential
+from keras.callbacks import EarlyStopping
+from keras.layers import Dense, LSTM, Dropout ,Bidirectional
+
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 
 df = pd.read_csv("AAPL.csv")
